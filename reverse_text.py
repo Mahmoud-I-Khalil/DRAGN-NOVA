@@ -77,7 +77,7 @@ def reverse_text_with_punctuation(input_file_name, output_file_name, newlines=Tr
     output_file.close()
     
 def main():
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 1: # use command line args
         print("Usage: python3 reverse_text.py [name of text file in current directory to be reversed]")
         input_file_name = sys.argv[1]
         name = input_file_name.split(".")[0]
@@ -88,7 +88,7 @@ def main():
         reverse_text(input_file_name, reverse_output_name)
         reverse_text_with_punctuation(input_file_name, reversed_wpunc_output_name)
         print("Files Generated: " + reverse_output_name + ", " + reversed_wpunc_output_name)
-    else:
+    else: # change these file names manually to run without command line args
         reverse_text("data/input.txt", "data/output.txt")
         reverse_text_with_punctuation("data/input.txt", "data/punc_output.txt")
 
