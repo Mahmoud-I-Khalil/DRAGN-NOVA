@@ -1,23 +1,24 @@
 """Functions for reversing text files"""
 
 import string 
+import sys
 
-def reverse_text(input_file_string, output_file_string, newlines=True):
+def reverse_text(input_file_name, output_file_name, newlines=True):
     """Takes text input file and creates a new file with all the text flipped, NOT including punctuation. 
     For example, "Hi, I'm John" -> "John I'm Hi,"
 
     Args:
-        input_file_string (str): Path to input file
-        output_file_string (str): Path to the output file. 
+        input_file_name (str): Name of input file
+        output_file_name (str): Name of output file.  
         newlines (bool, optional): Whether or not you want the output file to have new lines. Defaults to True.
     """
-    output_file = open(output_file_string, "w")
+    output_file = open(output_file_name, "w")
     
     data = []
     char_count = 0
 
     # get info from input file
-    with open(input_file_string, "r") as input_file:
+    with open(input_file_name, "r") as input_file:
         for line in input_file:     
             for word in line.split():
                 data.append(word + " ") 
@@ -36,22 +37,22 @@ def reverse_text(input_file_string, output_file_string, newlines=True):
     output_file.writelines(reversed_data)
     output_file.close()
 
-def reverse_text_with_punctuation(input_file_string, output_file_string, newlines=True):
+def reverse_text_with_punctuation(input_file_name, output_file_name, newlines=True):
     """Takes text input file and creates a new file with all the text flipped, including punctuation.
     For example, "Hi, I'm John" -> "John I'm ,Hi"
 
     Args:
-        input_file_string (str): Path to input file
-        output_file_string (str): Path to the output file. 
+        input_file_name (str): Name of input file
+        output_file_name (str): Name of output file. 
         newlines (bool, optional): Whether or not you want the output file to have new lines. Defaults to True.
     """
-    output_file = open(output_file_string, "w")
+    output_file = open(output_file_name, "w")
     
     data = []
     char_count = 0
 
     # get info from input file
-    with open(input_file_string, "r") as input_file:
+    with open(input_file_name, "r") as input_file:
         for line in input_file:     
             for word in line.split():
                 if word[-1] in string.punctuation:
@@ -76,8 +77,20 @@ def reverse_text_with_punctuation(input_file_string, output_file_string, newline
     output_file.close()
     
 def main():
-    reverse_text("data/input.txt", "data/output.txt")
-    reverse_text_with_punctuation("data/input.txt", "data/punc_output.txt")
+    if len(sys.argv) > 1:
+        print("Usage: python3 reverse_text.py [name of text file in current directory to be reversed]")
+        input_file_name = sys.argv[1]
+        name = input_file_name.split(".")[0]
+        
+        reverse_output_name = name + "_reversed.txt"
+        reversed_wpunc_output_name = name + "_reversed_wpunc.txt"
+        
+        reverse_text(input_file_name, reverse_output_name)
+        reverse_text_with_punctuation(input_file_name, reversed_wpunc_output_name)
+        print("Files Generated: " + reverse_output_name + ", " + reversed_wpunc_output_name)
+    else:
+        reverse_text("data/input.txt", "data/output.txt")
+        reverse_text_with_punctuation("data/input.txt", "data/punc_output.txt")
 
 if __name__ == "__main__":
     main()
