@@ -1,6 +1,5 @@
 """Functions for reversing text files"""
 
-import string 
 import sys
 
 def reverse_text(input_file_name, output_file_name, newlines=True):
@@ -47,33 +46,53 @@ def reverse_text_with_punctuation(input_file_name, output_file_name, newlines=Tr
         newlines (bool, optional): Whether or not you want the output file to have new lines. Defaults to True.
     """
     output_file = open(output_file_name, "w")
-    
+        
     data = []
     char_count = 0
 
-    # get info from input file
+        # get info from input file
     with open(input_file_name, "r") as input_file:
-        for line in input_file:     
+        for line in input_file: 
             for word in line.split():
-                if word[-1] in string.punctuation:
-                    # if the word has punctuation attached to the end, seperate them and add the word first
-                    data.append(word[:-1] + " ")
-                    data.append(word[-1])
-                else:           
-                    data.append(word + " ")
+                remove_front = False
+                # break the first special character off, if it is present
+                if not word[0].isalpha():
+                    data.append(word[0])
+                    remove_front = True
+                
+                # find how many special characters are at the end
+                back_index = -1
+                while abs(back_index) < len(word):
+                    #print("Back index: " + str(back_index))
+                    if not word[back_index].isalpha():
+                        back_index -= 1
+                    else:
+                        break
                     
+                # add the core part of the word (word minus front and end pieces) to the data
+                if remove_front and back_index < -1:
+                    data.append(word[1:back_index + 1])
+                elif not remove_front and back_index < -1:
+                    data.append(word[:back_index + 1])
+                elif remove_front and back_index == -1:
+                    data.append(word[1:])
+                elif not remove_front and back_index == -1:
+                    data.append(word)
+                    
+                # add the end peices to the data
+                for i in range (back_index + 1, 0, 1):
+                    data.append(word[i])
+                
+                data.append(" ")
+                
                 if newlines:
                     char_count += len(word)
                     # newlines every 100 char
                     if char_count > 100:
                         data.append("\n") 
                         char_count = 0
-    
-    # reverse the array
-    reversed_data = data[::-1]
-    
-    # write the reversed list to the output file
-    output_file.writelines(reversed_data)
+
+    output_file.writelines(data[::-1])
     output_file.close()
     
 def main():
